@@ -1,0 +1,16 @@
+{
+  "name": "bluedafeiyu-design",
+  "private": true,
+  "type": "module",
+  "description": "蓝色大肥鱼 · 深海海报视觉原型（CDN 依赖，仅供评审）",
+  "engines": {
+    "node": ">=22.12"
+  },
+  "scripts": {
+    "serve": "python3 -m http.server 5174 -d .",
+    "test": "node --test theme.test.mjs",
+    "screenshot": "node tools/screenshot.mjs",
+    "data": "node tools/build-prototype-data.mjs"
+  },
+  "license": "MIT"
+}
