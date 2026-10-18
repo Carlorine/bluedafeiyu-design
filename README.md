@@ -2,8 +2,6 @@
 
 这是改版方案的**审核用中间产物**，不是生产站点。它用独立的 HTML / CSS / JS 跑通「深海海报」的版式、交互和文案；生产静态站在 `bluedafeiyu-site` 仓库。
 
-> 根目录 `offline/` 是原型 7 个页面的**完整 HTML/CSS/JS 包**；`cd offline && python3 -m http.server 8081` 打开，图片走 GitHub Raw。
-
 token、对比度、版式与验收口径见本仓库 [`DESIGN.md`](DESIGN.md)。
 
 ## 视觉与依赖
@@ -30,7 +28,7 @@ token、对比度、版式与验收口径见本仓库 [`DESIGN.md`](DESIGN.md)�
 python3 -m http.server 5174 -d .
 ```
 
-打开 <http://127.0.0.1:5174/index.html>。`works.json` 与图片走相对路径和 GitHub Raw，直接双击 `index.html` 会因为 `fetch` 的 file:// 限制显示空页面；只想双击看首页请打开根目录的 `offline.html`，完整交互请用上面的本地服务。
+打开 <http://127.0.0.1:5174/index.html>。`works.json` 与图片走相对路径和 GitHub Raw，直接双击 `index.html` 会因为 `fetch` 的 file:// 限制显示空页面，请用上面的本地服务打开。
 
 ## 页面
 
