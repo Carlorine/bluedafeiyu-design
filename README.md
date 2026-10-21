@@ -1,118 +1,94 @@
-# 深海海报 · Phase 0 视觉原型
+# 蓝色大肥鱼 · 深海海报
 
-这是改版方案的**审核用中间产物**，不是生产站点。它用独立的 HTML / CSS / JS 跑通「深海海报」的版式、交互和文案；生产静态站在 `bluedafeiyu-site` 仓库。
+AI 娘二创作品档案的静态视觉原型，用于评审页面设计与交互。包含作品浏览、角色索引、合集、社群和本机收藏，支持中 / 英 / 日三语及深浅主题。
 
-token、对比度、版式与验收口径见本仓库 [`DESIGN.md`](DESIGN.md)。
+[在线预览](https://carlorine.github.io/bluedafeiyu-design/) · [设计规范](DESIGN.md) · [贡献指南](CONTRIBUTING.md) · [交互与评审参考](docs/prototype-reference.md)
 
-## 视觉与依赖
+> 本仓库负责设计原型。内容数据来自现有快照；收藏保存在访问者的浏览器中，不提供账号、投稿后台或生产内容管理。
 
-这一版按「海报和主题色融进整站」的意见保留深海配色，并提供**浅色 / 深色切换**：
+## 快速开始
 
-- **色彩**：深海画布 `#04121c`，抬升面 `#061a27 / #0a2433 / #0e2e40`，正文 `#edf4f2`，次级 `#a9bec6`，三级 `#7d939d`，主色青 `#7fe3e6`，暖色点缀 `#ffb3a0`。颜色都收在 `deepsea.css` 顶部的 `--ds-*` 变量里；正文只用 `--ds-ink` / `--ds-ink-2`，控件轮廓用 `--ds-line-strong`（≥3:1）。
-- **明暗模式**：默认沿用深色，顶栏太阳 / 月亮按钮切换模式，手机端也直接显示。浅色用海雾白画布 `#f4f7f9`、深青文字 `#163343` 与 Pixiv 蓝主色 `#0068bb`（亮蓝 `#0096fa` 只做软底与装饰），同步覆盖 DaisyUI 的颜色变量和原生控件的 `color-scheme`。首页海报随模式淡出到页面底色，浅色模式使用深青文字和浅色遮罩；海报高度为动态视口高度减去顶栏，首屏不露出下一节。图片上的收藏按钮和全屏大图保留深色衬底。`theme.js` 在样式加载前恢复本机选择，翻页与刷新保留，多个标签页同步；存储不可用时仍可在当前页切换。切换按钮的提示跟随中 / 英 / 日语言。
-- **组件**：用 **Tailwind + DaisyUI** 的现成类做基础（`btn` / `input` / `select` / `dialog` / `skeleton`），再收敛成平直的控制件：2px 圆角、无软阴影、下划线输入框。DaisyUI 主题 `[data-theme="deepsea"]` 在 `deepsea.css` 里用 OKLCH 变量定义。
-- **图片与间距**：作品图、角色图、合集封面、详情与大图浮层统一 12px 圆角，小缩略图为 8px；几何值集中在 `--ds-radius-*` / `--ds-space-*`。图片与标题保持 8–12px，筛选栏与作品流间隔 24px，避免图文和控件贴边。全屏大图按视口剩余高度等比缩放，竖图也能完整显示，并给标题和切图按钮留出空间。
-- **图标**：沿用 DaisyUI 的 SVG + 文字标签结构，使用本地 `icons.svg` 中的 [Heroicons 2.2.0 outline](https://github.com/tailwindlabs/heroicons/tree/v2.2.0/optimized/24/outline)。导航、类型筛选、随机、下载、返回、重试和加载更多使用同一套描边图标；翻译只更新文字节点。SVG 内保留 MIT 许可，运行时不依赖图标 CDN。
-- **版式**：图片优先的档案版式。顶部导航只有「作品 / 角色 / 合集 / 社群」四项，左上角菜单按钮手动唤出左侧抽屉（首页默认不展开，和 Pixiv 一样）。首页是海报 + 四列作品墙 + 六列角色卡 + 合集特写；作品库用类型标签 + 角色 / 合集筛选 + 三栏 contact sheet；角色页是四列单图肖像卡，每个角色取一张最新的竖幅插画作封面；合集页是封面 + 文案 + 四张收录预览的特写卡；社群页放真实的 QQ 群信息、二维码、群规和站长账号。卡片不做统一圆角盒子，靠间距、细线和图片本身分层。
-- **字体**：正文与界面用 **HarmonyOS Sans SC**（400 / 500 / 700）；站点名、首页导语与 h1/h2 用 **Noto Serif**（拉丁 Noto Serif、中文回退 Noto Serif SC）。均通过 jsDelivr 的 `@fontsource` / `harmonyos-sans-webfont-splitted` 引入。
+需要 Node.js 22.12+、npm，以及本地预览使用的 Python 3。
 
-原型阶段 Tailwind 用的是 Play CDN、DaisyUI 用的是 `dist/styled.css` 整包，都只是为了让审核能直接打开。生产接入时需要换成**真正的 Tailwind 构建**（只产出用到的工具类），并自托管 HarmonyOS Sans / Noto Serif 字体，不能把 Play CDN 带上线。
-
-> DaisyUI 自带 `.hero { display: grid; place-items: center }` 和 `.hero-content { display: flex }`，会和首屏海报布局撞车。`deepsea.css` 里已显式写回 `display: block`，后续迁移时别删。
-
-## 启动
-
-在仓库根目录：
-
-```bash
-python3 -m http.server 5174 -d .
+```sh
+gh repo clone Carlorine/bluedafeiyu-design
+cd bluedafeiyu-design
+npm ci
+npm run dev
 ```
 
-打开 <http://127.0.0.1:5174/index.html>。`works.json` 与图片走相对路径和 GitHub Raw，直接双击 `index.html` 会因为 `fetch` 的 file:// 限制显示空页面，请用上面的本地服务打开。
+打开 <http://127.0.0.1:5174/>。`dev` 先构建再启动服务；修改文件后重新构建并刷新页面。不要直接双击 HTML，浏览器的 `file://` 限制会阻止读取 `works.json`。
 
-## 页面
+## 常用命令
 
-| 页面 | 地址 | 说明 |
-|---|---|---|
-| 首页 | `/index.html` | 海报首屏、四列最近收录、六列角色卡、合集特写；默认不展开侧栏 |
-| 作品库 | `/works.html` | 类型标签 + 角色 / 合集 / 排序筛选、加载更多、空态 / 加载态 / 错误态 |
-| 作品详情 | `/work.html?slug=<slug>` | 大字标题、大图、同角色缩略图条、相关作品、lightbox |
-| 角色 | `/characters.html` | 12 个角色，按作品数量排序，每个角色一张 4:5 竖幅封面 |
-| 合集 | `/topics.html` | 站长手动挑选的合集，封面 + 文案 + 收录预览 + 作者 |
-| 社群 | `/community.html` | 真实 QQ 群信息、二维码、投稿方式、活动、群规、站长账号 |
-| 收藏 | `/favorites.html` | 本机 localStorage 收藏；从侧栏底部的「收藏」进入，含空态 |
+| 命令 | 用途 |
+| --- | --- |
+| `npm run dev` | 构建并在本机 5174 端口预览 |
+| `npm run build` | 生成可部署的 `dist/` |
+| `npm run serve` | 预览已有的 `dist/` |
+| `npm test` | 执行明暗主题行为回归 |
+| `npm run check` | 测试、JS 语法检查、构建、静态资源及链接校验 |
+| `npm run data -- --snapshot /path/to/site-data.json` | 从生产快照重新生成 `works.json` |
+| `npm run screenshot -- <url> <out.png> [width] [height] [scale] [full]` | 使用本机 Chrome 截图 |
 
-### 可分享的 URL 状态
+## 页面与功能
 
-作品库的筛选会写回地址栏（`replaceState`，刷新和分享都能还原）：
+| 页面 | 入口 | 内容 |
+| --- | --- | --- |
+| 首页 | `index.html` | 海报、最近作品、角色与精选合集 |
+| 作品库 | `works.html` | 搜索、类型 / 角色 / 合集筛选、排序、加载更多 |
+| 作品详情 | `work.html?slug=<slug>` | 大图、作品信息、相关作品与灯箱 |
+| 角色 | `characters.html` | 按作品数量排序的角色索引 |
+| 合集 | `topics.html` | 合集封面、说明与收录预览 |
+| 社群 | `community.html` | QQ 群、投稿说明与群规 |
+| 收藏 | `favorites.html` | 当前浏览器保存的收藏 |
 
-- `?t=meme|illustration|setting|comic` 类型
-- `?c=<characterId>` 角色
-- `?topic=<topicId>` 合集
-- `?q=<关键词>` 搜索
-- `?sort=new|old|random` 排序
-- `?limit=<n>` 首屏渲染数量
+筛选状态可通过 URL 分享，例如 `works.html?t=illustration&sort=new`；语言可用 `?lang=zh|en|ja` 指定。加载 / 空 / 错误态与灯箱等评审入口见[交互参考](docs/prototype-reference.md#可分享的-url-状态)。
 
-审核用的状态参数：
+## 构建与依赖
 
-- `?sidebar=open` 直接展开左侧抽屉（截图用）
-- `works.html?state=loading|empty|error` 强制加载 / 空 / 错误态
-- `?lang=zh|en|ja` 指定语言（也会记住到 localStorage）
-- `work.html?slug=<slug>&lightbox=1` 直接打开 lightbox
+页面使用原生 HTML / CSS / JavaScript。Tailwind CSS 3 在构建时扫描页面与脚本生成工具类，DaisyUI 4 样式从锁定的 npm 包复制到 `dist/vendor/`，浏览器无需运行 Tailwind Play CDN。
 
-导航只有「作品 / 角色 / 合集 / 社群」，左上角菜单按钮打开左侧抽屉：抽屉里放同一套主导航、五种类型筛选、语言和投稿，底部另有本机「收藏」入口；抽屉不会自动出现，也不会随滚动回缩。≤1180px 时主导航收进抽屉，≤960px 顶栏显示「菜单 + 站名 + 明暗切换 + 搜索」，类型筛选仍在抽屉和作品页标签里，不会在页面顶部重复一条 chip 行。
+`tools/build.mjs` 每次清理 `dist/`，仅复制七个页面、运行时 CSS / JS、图标、图片、作品数据和许可文件。仓库文档、开发工具、依赖目录与 Git 元数据不会发布。所有站内地址使用相对路径，可部署到 GitHub Pages 的仓库子路径。
 
-## 数据
+- `package-lock.json` 固定依赖树，CI 使用 `npm ci` 安装。
+- 字体仍通过 jsDelivr 加载，失败时回退到系统字体。
+- 作品缩略图与大图来自 `lmy414/ai-girl-stickers` 的 GitHub Raw，访问效果取决于外部网络。
+- 收藏、语言与主题使用 `deepsea-prototype-*` localStorage key。预览域名变化时，本机状态不会跨域迁移。
+- 当前保留与原型兼容的 Tailwind 3 / DaisyUI 4；`npm audit` 对 Tailwind 的间接开发依赖有已知告警。它们仅在构建时运行，不进入发布的 JavaScript；升级主版本前需要重新验证视觉效果。
 
-`works.json` 由脚本从构建快照生成：
+## 静态托管
 
-```bash
-node tools/build-prototype-data.mjs --snapshot <path/to/site-data.json>
+本仓库通过 [GitHub Actions](https://github.com/Carlorine/bluedafeiyu-design/actions) 构建，并把 `dist/` 部署到 GitHub Pages：
+
+1. 在仓库 **Settings → Pages → Build and deployment** 选择 **GitHub Actions**。
+2. push 到 `main` 或本次整理分支 `codex/repository-standards` 时，`pages.yml` 自动执行完整检查。
+3. 检查通过后上传静态产物并发布；失败时停止部署，可在 Actions 中查看日志。
+
+[预览地址](https://carlorine.github.io/bluedafeiyu-design/)展示最近一次成功部署的版本。当前整理分支与 `main` 共用一个预览地址；合并后可从 `pages.yml` 的触发分支中移除整理分支。Pull Request 只执行检查，不会覆盖预览。
+
+也可以把 `npm run build` 生成的 `dist/` 上传到任意静态服务器，无需 Node.js 服务端、数据库或环境变量。
+
+## 目录
+
+```text
+├── *.html                  七个页面
+├── deepsea.css             设计 token、布局与明暗主题
+├── prototype.js            数据渲染、筛选、收藏与三语文案
+├── theme.js                首屏主题恢复与跨标签同步
+├── works.json              已生成的作品快照
+├── assets/                 海报、头像、群二维码
+├── tools/                  构建、产物检查、数据生成与截图
+├── .github/                CI、Pages 工作流与 PR 模板
+├── docs/                   评审参考与调研材料
+├── DESIGN.md               视觉与交互规范
+└── CONTRIBUTING.md         开发流程与提交说明规范
 ```
 
-- 输入：`dist/site-data.json`（先跑一次站点构建产物）
-- 输出：`works.json`，525 件真实作品、12 个有作品的角色、4 个分类、1 个专题
-- 图片：内容仓 `lmy414/ai-girl-stickers` 的 GitHub Raw 缩略图 / 大图
-- 首屏主视觉：`assets/hero.png`，即你指定的那张 `初版.png`（1672 × 941）
+## 参与贡献
 
-作品 `slug`、详情 URL 和评论串规则与生产一致；原型只读 `works.json`，不碰 `data/`。
+请先阅读 [CONTRIBUTING.md](CONTRIBUTING.md)。提交说明采用 `type(scope): 简短说明`；一个提交聚焦一个目的，正文按需解释原因、关键取舍与验证方式。页面变更应附截图，并检查手机 / 桌面、深色 / 浅色和受影响语言。
 
-## 截图
+## 许可
 
-明暗模式的行为回归（无需安装依赖）：
-
-```bash
-npm test
-```
-
-无依赖的 Chrome CDP 截图脚本（真实设备像素比，绕过 macOS 上 `--window-size` 的 500px 下限）：
-
-```bash
-node tools/screenshot.mjs <url> <out.png> [width] [height] [scale] [full]
-
-# 例：375 × 812 @2x 整页
-node tools/screenshot.mjs 'http://127.0.0.1:5174/index.html' out.png 375 812 2 1
-```
-
-`WAIT` 环境变量可调等待毫秒数（默认 4500），`CHROME` 可指定 Chrome 路径。
-
-`screenshots/` 未随本仓库分发；需要时用上面的截图脚本重新生成。上一轮评审覆盖：
-
-- 首页：`redesign-home-1440 / 768 / 375`
-- 作品库：`redesign-works-1440 / 768 / 375`，空态 / 加载态 / 错误态 `redesign-works-empty / loading / error-1440`
-- 详情：`redesign-work-1440 / 375`、`redesign-lightbox-1440`
-- 索引：`redesign-characters-1440 / 768 / 375`、`redesign-topics-1440 / 768 / 375`
-- 社群：`redesign-community-1440 / 768 / 375`
-- 抽屉：`redesign-sidebar-1440`、`redesign-sidebar-375`
-- 语言：`redesign-home-en-1440`、`redesign-works-ja-1440`
-- 明暗：`redesign-light-home / works / characters / community-1440`
-
-## 原型边界
-
-- **只做演示的数据**：收藏存在 `localStorage` 的 `deepsea-prototype-favorites`，语言存在 `deepsea-prototype-lang`，明暗模式存在 `deepsea-prototype-theme`（`light` / `dark`），与生产 key 不同，清掉不影响站点。
-- **可访问性**：三语文案同时覆盖可见文本、`aria-label` 与 `placeholder`；焦点环 3px 青色；移动端控件与筛选 chip ≥44px；reduced-motion 下关闭海报展开、骨架脉冲和过渡。
-- **多图是版式替身**：详情页的缩略图条暂时用「同角色作品」模拟系列 / 多图；生产阶段由 `works.json` 的可选 `images` / `seriesId` 驱动。
-- **文案已按定稿口径重写**：中文为源，en / ja 同步在 `prototype.js` 的 `I18N` 里。审核通过后才搬进 `lang.js`。
-- **没有迁移生产资源**：hero 图仍在 `assets/`，没有写进内容仓；`gallery.css` / `--gallery-*` 没有进入本原型。
-- **CDN 只属于原型**：Tailwind Play CDN、DaisyUI `styled.css`、HarmonyOS Sans 字体都从 jsDelivr 拉取，离线打开会退回系统字体、按钮样式也会缺一部分；上线前必须换成自托管构建产物。
-- **已知限制**：大图与缩略图依赖 GitHub Raw，弱网下会先显示加载状态；`works.json` 约 574 KB，原型不做分片；作品库首屏 48 件、之后每批 48 件，未做虚拟列表。
+代码按 [MIT License](LICENSE) 分发，保留原作者版权声明。作品图片、角色形象、字体与第三方图标遵循各自授权；仓库的 MIT 许可不代替这些内容的授权。
