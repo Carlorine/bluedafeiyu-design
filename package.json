@@ -2,15 +2,30 @@
   "name": "bluedafeiyu-design",
   "private": true,
   "type": "module",
-  "description": "蓝色大肥鱼 · 深海海报视觉原型（CDN 依赖，仅供评审）",
+  "description": "蓝色大肥鱼 · AI 娘二创作品档案的静态视觉原型",
   "engines": {
     "node": ">=22.12"
   },
   "scripts": {
-    "serve": "python3 -m http.server 5174 -d .",
+    "build": "node tools/build.mjs",
+    "dev": "npm run build && npm run serve",
+    "serve": "python3 -m http.server 5174 --bind 127.0.0.1 --directory dist",
     "test": "node --test theme.test.mjs",
+    "check": "npm test && node --check prototype.js && node --check theme.js && npm run build && node tools/check-build.mjs",
     "screenshot": "node tools/screenshot.mjs",
     "data": "node tools/build-prototype-data.mjs"
   },
-  "license": "MIT"
+  "license": "MIT",
+  "devDependencies": {
+    "daisyui": "4.12.24",
+    "tailwindcss": "3.4.19"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Carlorine/bluedafeiyu-design.git"
+  },
+  "homepage": "https://carlorine.github.io/bluedafeiyu-design/",
+  "bugs": {
+    "url": "https://github.com/Carlorine/bluedafeiyu-design/issues"
+  }
 }
