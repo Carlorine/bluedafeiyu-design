@@ -1,94 +1,99 @@
-# 蓝色大肥鱼 · 深海海报
+<div align="center">
+  <img src="assets/avatar.png" alt="蓝色大肥鱼" width="80" height="80">
+  <h1>蓝色大肥鱼 · 深海海报</h1>
+  <p><strong>以作品为中心的 AI 娘二创档案</strong></p>
+  <p>深海视觉 · 三语界面 · 明暗主题 · 静态部署</p>
+  <p>
+    <strong>简体中文</strong> · <a href="README.en.md">English</a>
+  </p>
+  <p>
+    <a href="https://carlorine.github.io/bluedafeiyu-design/">在线预览</a> ·
+    <a href="DESIGN.md">设计规范</a> ·
+    <a href="CONTRIBUTING.md">贡献指南</a> ·
+    <a href="https://github.com/Carlorine/bluedafeiyu-design/actions">构建状态</a>
+  </p>
+  <img src="assets/hero.png" alt="深海主题主视觉：蓝白色角色与海洋背景" width="100%">
+</div>
 
-AI 娘二创作品档案的静态视觉原型，用于评审页面设计与交互。包含作品浏览、角色索引、合集、社群和本机收藏，支持中 / 英 / 日三语及深浅主题。
+## 关于项目
 
-[在线预览](https://carlorine.github.io/bluedafeiyu-design/) · [设计规范](DESIGN.md) · [贡献指南](CONTRIBUTING.md) · [交互与评审参考](docs/prototype-reference.md)
+「深海海报」是蓝色大肥鱼作品档案的静态视觉原型，用于展示与评审页面设计和交互。以图片为主线，将作品浏览、角色索引、精选合集与社群入口串联起来。
 
-> 本仓库负责设计原型。内容数据来自现有快照；收藏保存在访问者的浏览器中，不提供账号、投稿后台或生产内容管理。
+<table>
+  <tr>
+    <td width="33%" valign="top">
+      <h3>作品发现</h3>
+      <p>按类型、角色或合集浏览，支持关键词搜索、排序与可分享的筛选状态。</p>
+    </td>
+    <td width="33%" valign="top">
+      <h3>沉浸阅读</h3>
+      <p>海报首屏、大图灯箱与相关作品，兼顾手机和桌面浏览。</p>
+    </td>
+    <td width="33%" valign="top">
+      <h3>自由切换</h3>
+      <p>提供中文、英文、日文界面，以及深色和浅色主题。</p>
+    </td>
+  </tr>
+</table>
 
-## 快速开始
+> 本项目使用已有内容快照，包含收藏交互演示，不提供账号系统、投稿后台或生产内容管理。
 
-需要 Node.js 22.12+、npm，以及本地预览使用的 Python 3。
+## 探索页面
+
+| 页面 | 内容 |
+| --- | --- |
+| [首页](https://carlorine.github.io/bluedafeiyu-design/) | 海报、最近作品、角色与精选合集 |
+| [作品库](https://carlorine.github.io/bluedafeiyu-design/works.html) | 搜索、类型 / 角色 / 合集筛选、排序与加载更多 |
+| [作品详情示例](https://carlorine.github.io/bluedafeiyu-design/work.html?slug=deepseek202610020028) | 大图、作品信息、相关作品与灯箱 |
+| [角色](https://carlorine.github.io/bluedafeiyu-design/characters.html) | 按作品数量排序的角色索引 |
+| [合集](https://carlorine.github.io/bluedafeiyu-design/topics.html) | 合集封面、说明与收录预览 |
+| [社群](https://carlorine.github.io/bluedafeiyu-design/community.html) | QQ 群、投稿说明与群规 |
+| [收藏](https://carlorine.github.io/bluedafeiyu-design/favorites.html) | 收藏作品与空态展示 |
+
+作品库的筛选状态可直接分享：[插画 · 最新收录](https://carlorine.github.io/bluedafeiyu-design/works.html?t=illustration&sort=new)。更多状态与交互说明见[评审参考](docs/prototype-reference.md#可分享的-url-状态)。
+
+## 技术与构建
+
+使用原生 **HTML / CSS / JavaScript**，结合 **Tailwind CSS 3** 与 **DaisyUI 4**。Tailwind 在构建时生成工具类，DaisyUI 样式随静态产物发布，无需浏览器运行 Tailwind Play CDN。
+
+构建需要 **Node.js 22.12+** 与 **npm**：
 
 ```sh
-gh repo clone Carlorine/bluedafeiyu-design
-cd bluedafeiyu-design
 npm ci
-npm run dev
+npm run check
 ```
 
-打开 <http://127.0.0.1:5174/>。`dev` 先构建再启动服务；修改文件后重新构建并刷新页面。不要直接双击 HTML，浏览器的 `file://` 限制会阻止读取 `works.json`。
+`npm run check` 执行主题回归、JavaScript 语法检查、静态构建和资源链接校验。单独构建可使用 `npm run build`；安装、开发与数据更新流程见[贡献指南](CONTRIBUTING.md)。
 
-## 常用命令
+<details>
+<summary><strong>依赖与内容来源</strong></summary>
 
-| 命令 | 用途 |
-| --- | --- |
-| `npm run dev` | 构建并在本机 5174 端口预览 |
-| `npm run build` | 生成可部署的 `dist/` |
-| `npm run serve` | 预览已有的 `dist/` |
-| `npm test` | 执行明暗主题行为回归 |
-| `npm run check` | 测试、JS 语法检查、构建、静态资源及链接校验 |
-| `npm run data -- --snapshot /path/to/site-data.json` | 从生产快照重新生成 `works.json` |
-| `npm run screenshot -- <url> <out.png> [width] [height] [scale] [full]` | 使用本机 Chrome 截图 |
+- 依赖树由 `package-lock.json` 固定，持续集成使用 `npm ci` 安装。
+- HarmonyOS Sans 与 Noto Serif 字体通过 jsDelivr 加载，失败时回退到系统字体。
+- 作品缩略图与大图来自 `lmy414/ai-girl-stickers` 的 GitHub Raw，加载效果取决于外部网络。
+- 当前保留与原型兼容的 Tailwind 3 / DaisyUI 4；Tailwind 的间接开发依赖存在已知审计告警。这些依赖仅在构建时运行，不进入发布的 JavaScript，升级主版本前需重新验证视觉效果。
 
-## 页面与功能
-
-| 页面 | 入口 | 内容 |
-| --- | --- | --- |
-| 首页 | `index.html` | 海报、最近作品、角色与精选合集 |
-| 作品库 | `works.html` | 搜索、类型 / 角色 / 合集筛选、排序、加载更多 |
-| 作品详情 | `work.html?slug=<slug>` | 大图、作品信息、相关作品与灯箱 |
-| 角色 | `characters.html` | 按作品数量排序的角色索引 |
-| 合集 | `topics.html` | 合集封面、说明与收录预览 |
-| 社群 | `community.html` | QQ 群、投稿说明与群规 |
-| 收藏 | `favorites.html` | 当前浏览器保存的收藏 |
-
-筛选状态可通过 URL 分享，例如 `works.html?t=illustration&sort=new`；语言可用 `?lang=zh|en|ja` 指定。加载 / 空 / 错误态与灯箱等评审入口见[交互参考](docs/prototype-reference.md#可分享的-url-状态)。
-
-## 构建与依赖
-
-页面使用原生 HTML / CSS / JavaScript。Tailwind CSS 3 在构建时扫描页面与脚本生成工具类，DaisyUI 4 样式从锁定的 npm 包复制到 `dist/vendor/`，浏览器无需运行 Tailwind Play CDN。
-
-`tools/build.mjs` 每次清理 `dist/`，仅复制七个页面、运行时 CSS / JS、图标、图片、作品数据和许可文件。仓库文档、开发工具、依赖目录与 Git 元数据不会发布。所有站内地址使用相对路径，可部署到 GitHub Pages 的仓库子路径。
-
-- `package-lock.json` 固定依赖树，CI 使用 `npm ci` 安装。
-- 字体仍通过 jsDelivr 加载，失败时回退到系统字体。
-- 作品缩略图与大图来自 `lmy414/ai-girl-stickers` 的 GitHub Raw，访问效果取决于外部网络。
-- 收藏、语言与主题使用 `deepsea-prototype-*` localStorage key。预览域名变化时，本机状态不会跨域迁移。
-- 当前保留与原型兼容的 Tailwind 3 / DaisyUI 4；`npm audit` 对 Tailwind 的间接开发依赖有已知告警。它们仅在构建时运行，不进入发布的 JavaScript；升级主版本前需要重新验证视觉效果。
+</details>
 
 ## 静态托管
 
-本仓库通过 [GitHub Actions](https://github.com/Carlorine/bluedafeiyu-design/actions) 构建，并把 `dist/` 部署到 GitHub Pages：
+[GitHub Actions](https://github.com/Carlorine/bluedafeiyu-design/actions) 自动检查并构建项目，再将静态产物发布至 **GitHub Pages**。在线预览展示最近一次成功部署的版本，Pull Request 仅运行检查。
 
-1. 在仓库 **Settings → Pages → Build and deployment** 选择 **GitHub Actions**。
-2. push 到 `main` 或本次整理分支 `codex/repository-standards` 时，`pages.yml` 自动执行完整检查。
-3. 检查通过后上传静态产物并发布；失败时停止部署，可在 Actions 中查看日志。
+构建产物也可部署到其他静态托管服务，无需 Node.js 服务端、数据库或环境变量。发布内容仅包含页面、运行时样式与脚本、图标、图片、作品数据和许可文件。
 
-[预览地址](https://carlorine.github.io/bluedafeiyu-design/)展示最近一次成功部署的版本。当前整理分支与 `main` 共用一个预览地址；合并后可从 `pages.yml` 的触发分支中移除整理分支。Pull Request 只执行检查，不会覆盖预览。
+## 文档与贡献
 
-也可以把 `npm run build` 生成的 `dist/` 上传到任意静态服务器，无需 Node.js 服务端、数据库或环境变量。
+- [设计规范](DESIGN.md)：视觉 token、版式与交互要求。
+- [贡献指南](CONTRIBUTING.md)：开发、验证和 commit 标题与正文规范。
+- [评审参考](docs/prototype-reference.md)：交互细节、状态参数与原型边界。
 
-## 目录
-
-```text
-├── *.html                  七个页面
-├── deepsea.css             设计 token、布局与明暗主题
-├── prototype.js            数据渲染、筛选、收藏与三语文案
-├── theme.js                首屏主题恢复与跨标签同步
-├── works.json              已生成的作品快照
-├── assets/                 海报、头像、群二维码
-├── tools/                  构建、产物检查、数据生成与截图
-├── .github/                CI、Pages 工作流与 PR 模板
-├── docs/                   评审参考与调研材料
-├── DESIGN.md               视觉与交互规范
-└── CONTRIBUTING.md         开发流程与提交说明规范
-```
-
-## 参与贡献
-
-请先阅读 [CONTRIBUTING.md](CONTRIBUTING.md)。提交说明采用 `type(scope): 简短说明`；一个提交聚焦一个目的，正文按需解释原因、关键取舍与验证方式。页面变更应附截图，并检查手机 / 桌面、深色 / 浅色和受影响语言。
+提交说明采用 `type(scope): 简短说明`，一个提交聚焦一个目的。页面变更请附截图，并检查手机 / 桌面、深色 / 浅色和受影响语言。
 
 ## 许可
 
-代码按 [MIT License](LICENSE) 分发，保留原作者版权声明。作品图片、角色形象、字体与第三方图标遵循各自授权；仓库的 MIT 许可不代替这些内容的授权。
+代码以 [MIT License](LICENSE) 分发，保留原作者版权声明。作品图片、角色形象、字体和第三方图标遵循各自授权；仓库的 MIT 许可不代替这些内容的授权。
+
+<hr>
+<p align="center">
+  <a href="https://carlorine.github.io/bluedafeiyu-design/">探索深海档案 →</a>
+</p>
